@@ -1,0 +1,72 @@
+### Problem Statement
+
+**Objective**: Write a SQL query to identify candidates who are proficient in all the required skills (`Python`, `Tableau`, and `PostgreSQL`) for a Data Science job. The output should list the `candidate_id` of these candidates, sorted in ascending order.
+
+---
+
+### Table Name: `candidates`
+
+| Column Name   | Data Type | Description                              |
+|---------------|-----------|------------------------------------------|
+| candidate_id  | integer   | Unique identifier for each candidate.    |
+| skill         | varchar   | A skill possessed by the candidate.      |
+
+---
+
+### Example Input (candidates table):
+
+| candidate_id | skill       |
+|--------------|-------------|
+| 123          | Python      |
+| 123          | Tableau     |
+| 123          | PostgreSQL  |
+| 234          | R           |
+| 234          | PowerBI     |
+| 234          | SQL Server  |
+| 345          | Python      |
+| 345          | Tableau     |
+
+---
+
+### Example Output:
+
+| candidate_id |
+|--------------|
+| 123          |
+
+---
+
+### Explanation:
+- Candidate `123` possesses all three required skills (`Python`, `Tableau`, and `PostgreSQL`).
+- Candidate `345` is missing the `PostgreSQL` skill.
+- Candidate `234` does not possess any of the required skills.
+
+---
+
+### SQL Query:
+
+```sql
+WITH cte AS (
+    SELECT 
+        candidate_id,
+        COUNT(skill) AS skill_count
+    FROM 
+        candidates
+    WHERE 
+        skill IN ('Python', 'Tableau', 'PostgreSQL') -- Filter for required skills
+    GROUP BY 
+        candidate_id
+    ORDER BY 
+        candidate_id ASC
+)
+SELECT 
+    candidate_id
+FROM 
+    cte
+WHERE 
+    skill_count = 3; -- Ensure all required skills are present
+```
+
+---
+
+The end.

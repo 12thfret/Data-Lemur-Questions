@@ -1,0 +1,90 @@
+### Problem Statement
+
+**Objective**: Write a SQL query to find the IDs of Facebook pages that have zero likes. The output should list the `page_id` of such pages, sorted in ascending order.
+
+---
+
+### Table 1: `pages`
+
+| Column Name | Data Type | Description                       |
+|-------------|-----------|-----------------------------------|
+| page_id     | integer   | Unique identifier for each page.  |
+| page_name   | varchar   | Name of the Facebook page.        |
+
+---
+
+### Table 2: `page_likes`
+
+| Column Name | Data Type | Description                       |
+|-------------|-----------|-----------------------------------|
+| user_id     | integer   | Unique identifier for the user.   |
+| page_id     | integer   | ID of the page the user liked.    |
+| liked_date  | datetime  | Timestamp of when the page was liked. |
+
+---
+
+### Example Input:
+
+**`pages` Table:**
+
+| page_id | page_name               |
+|---------|-------------------------|
+| 20001   | SQL Solutions           |
+| 20045   | Brain Exercises         |
+| 20701   | Tips for Data Analysts  |
+
+**`page_likes` Table:**
+
+| user_id | page_id | liked_date           |
+|---------|---------|----------------------|
+| 111     | 20001   | 2022-04-08 00:00:00 |
+| 121     | 20045   | 2022-03-12 00:00:00 |
+| 156     | 20001   | 2022-07-25 00:00:00 |
+
+---
+
+### Example Output:
+
+| page_id |
+|---------|
+| 20701   |
+
+---
+
+### Explanation:
+- The `pages` table lists all Facebook pages.
+- The `page_likes` table logs user likes for specific pages.
+- The query identifies pages in the `pages` table that have no matching entries in the `page_likes` table.
+- In the example, the page with `page_id = 20701` has no likes, so it is returned.
+
+---
+
+### SQL Query:
+
+```sql
+WITH cte AS (
+    SELECT 
+        p.page_id,
+        COUNT(l.liked_date) AS likes
+    FROM 
+        pages p
+    LEFT JOIN 
+        page_likes l
+    ON 
+        p.page_id = l.page_id
+    GROUP BY 
+        p.page_id
+)
+SELECT 
+    page_id 
+FROM 
+    cte
+WHERE 
+    likes = 0
+ORDER BY 
+    page_id ASC;
+```
+
+---
+
+The end.

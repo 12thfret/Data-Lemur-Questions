@@ -1,0 +1,67 @@
+### Problem Statement
+
+**Objective**: Write a SQL query to create a histogram of tweets posted per user in 2022. Group users by the number of tweets they posted in 2022 and count the number of users in each group.
+
+---
+
+**Table Name**: `tweets`
+
+| Column Name | Data Type | Description                                   |
+|-------------|-----------|-----------------------------------------------|
+| tweet_id    | integer   | Unique identifier for each tweet.             |
+| user_id     | integer   | Unique identifier for the user who posted it. |
+| msg         | string    | Content of the tweet.                         |
+| tweet_date  | timestamp | Timestamp of when the tweet was posted.       |
+
+---
+
+**Example Input** (tweets table):
+
+| tweet_id | user_id | msg                                                        | tweet_date           |
+|----------|---------|------------------------------------------------------------|----------------------|
+| 214252   | 111     | Am considering taking Tesla private at $420. Funding secured. | 2021-12-30 00:00:00 |
+| 739252   | 111     | Despite the constant negative press covfefe                 | 2022-01-01 00:00:00 |
+| 846402   | 111     | Following @NickSinghTech on Twitter changed my life!        | 2022-02-14 00:00:00 |
+| 241425   | 254     | If the salary is so competitive why won’t you tell me what it is? | 2022-03-01 00:00:00 |
+| 231574   | 148     | I no longer have a manager. I can't be managed              | 2022-03-23 00:00:00 |
+
+---
+
+**Expected Output**:
+
+| tweet_bucket | users_num |
+|--------------|-----------|
+| 1            | 2         |
+| 2            | 1         |
+
+---
+
+**Explanation**:
+- Users are grouped by the number of tweets they posted in 2022.
+- Two users posted only one tweet in 2022 (`tweet_bucket = 1`).
+- One user posted two tweets in 2022 (`tweet_bucket = 2`).
+
+---
+
+### SQL Query:
+
+```sql
+WITH cte AS (
+    SELECT 
+    user_id,
+    COUNT(msg) as tweet_bucket
+    FROM tweets
+    WHERE date_trunc('year', tweet_date) = '2022-01-01'
+    GROUP BY user_id
+)
+
+SELECT
+    tweet_bucket,
+    COUNT(user_id) as users_num
+    FROM cte
+    GROUP BY tweet_bucket
+```
+.
+---
+
+The end.
